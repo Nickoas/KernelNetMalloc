@@ -1,4 +1,4 @@
-obj-m = main.o
+obj-m = NetMalloc.o
 KVERSION = $(shell uname -r)
 
 all:

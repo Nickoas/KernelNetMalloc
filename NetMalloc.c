@@ -5,6 +5,20 @@
 #include <linux/syscalls.h>
 #include <linux/unistd.h>
 
+
+//Module definition
+#define AUTHOR      "Nicolas KLARMAN and Claude RAMSEYER"
+#define DESCRIPTION "NetMalloc for EPITECH"
+#define LICENSE     "GPL"
+#define NAME        "NetMalloc"
+
+MODULE_AUTHOR(AUTHOR);
+MODULE_DESCRIPTION(DESCRIPTION);
+MODULE_LICENSE(LICENSE);
+
+
+char modname[] = NAME;
+
 //Address
 #if defined __X86_64__
 #define __POINTER_TYPE 	uint64_t
