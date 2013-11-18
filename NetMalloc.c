@@ -4,7 +4,7 @@
 #include <linux/init.h>
 #include <linux/syscalls.h>
 #include <linux/unistd.h>
-
+#include <linux/slab.h>
 
 //Module definition
 #define AUTHOR      "Nicolas KLARMAN and Claude RAMSEYER"
@@ -15,7 +15,6 @@
 MODULE_AUTHOR(AUTHOR);
 MODULE_DESCRIPTION(DESCRIPTION);
 MODULE_LICENSE(LICENSE);
-
 
 char modname[] = NAME;
 
@@ -38,7 +37,7 @@ typedef __POINTER_TYPE * addr_t;
 
 #define __FIRST_SYSCALL_ADDR 	sys_close
 #define __FIRST_SYSCALL_NUM 	__NR_close
-#define INSERT_INDEX 352
+#define INSERT_INDEX 333
 
 static addr_t sys_saved = NULL;
 
@@ -46,11 +45,23 @@ static addr_t sys_saved = NULL;
  *
  *
  */
-asmlinkage long sys_dynamic_phenix(void * params)
+asmlinkage int sys_netmalloc(unsigned long size, void **ptr)
 {
-	printk(KERN_INFO "Call my dynamic syscall with address : " SPK "\n", (__POINTER_TYPE) params);
+  printk(KERN_EMERG "Call my dynamic syscall with size : %lu \n", size);
 
-	return 12345;
+  void *newptr = kmalloc(size, GFP_KERNEL);
+  if (newptr == NULL) {
+    *ptr = NULL;
+    printk("ERROR\n");
+  } else {
+    printk("GOOD\n");
+    *ptr = newptr;
+    printk("ptr = %d\n", *ptr);
+  }
+
+
+
+  return 0;
 }
 
 /**
@@ -95,7 +106,7 @@ int my_module_init(void)
 
 	//Change syscall
 	sys_saved = table[INSERT_INDEX];
-	table[INSERT_INDEX] = (addr_t) sys_dynamic_phenix;
+	table[INSERT_INDEX] = (addr_t) sys_netmalloc;
 
 	//Lock write memory
 	write_cr0(read_cr0() | 0x10000);
@@ -136,5 +147,3 @@ void my_module_exit(void)
 //Module register
 module_init(my_module_init);
 module_exit(my_module_exit);
-
-MODULE_LICENSE("GPL");
