@@ -24,7 +24,10 @@ static char *server = "192.168.0.1:12345";
 module_param(server, charp, 0);
 MODULE_PARM_DESC(server, "server argument. IP:PORT");
 
+//Variables
 
+char *ip;
+char *port;
 
 //Address
 #if defined __X86_64__
@@ -88,6 +91,7 @@ addr_t * find_systable(void)
 int my_module_init(void)
 {
 	addr_t * table;
+	const char delimiter[] = ":";
 
 	printk(KERN_INFO "Load My Module ...\n");
 
@@ -108,6 +112,20 @@ int my_module_init(void)
 	write_cr0(read_cr0() | 0x10000);
 
 	printk(KERN_INFO "... done!\n");
+
+
+	printk(KERN_INFO "Check good parameter : %s\n", server);
+
+	ip = strsep(&server, delimiter);
+	port = strsep(&server, delimiter);
+
+	//TODO others checks
+	if (ip == NULL || port == NULL) {
+	  printk(KERN_INFO "bad parameter\n");
+	  return -1;
+	}
+
+	printk(KERN_INFO "ip='%s',port='%s'\n", ip, port);
 
 	return 0;
 }
