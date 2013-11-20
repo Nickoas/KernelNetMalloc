@@ -15,19 +15,9 @@ void *netmalloc(unsigned long size) {
   return ptr;
 }
 
-
 int main() {
 
   char hello[] = "HELLO\0";
   char *ptr = netmalloc(sizeof(char) * 1000);
   
-  printf("ptr::  d= %d\n", ptr);
-  
-    ptr[0] = 'a';
-    //ptr[1] = '\0';
-    //  strncpy(ptr, hello, 2);
-
-    //printf("syscall return %s\n", ptr);
-  
-
 }

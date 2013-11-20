@@ -16,7 +16,15 @@ MODULE_AUTHOR(AUTHOR);
 MODULE_DESCRIPTION(DESCRIPTION);
 MODULE_LICENSE(LICENSE);
 
-char modname[] = NAME;
+
+//Module parameters
+
+static char *server = "192.168.0.1:12345";
+
+module_param(server, charp, 0);
+MODULE_PARM_DESC(server, "server argument. IP:PORT");
+
+
 
 //Address
 #if defined __X86_64__
@@ -47,19 +55,7 @@ static addr_t sys_saved = NULL;
  */
 asmlinkage int sys_netmalloc(unsigned long size, void **ptr)
 {
-  printk(KERN_EMERG "Call my dynamic syscall with size : %lu \n", size);
-
-  void *newptr = kmalloc(size, GFP_KERNEL);
-  if (newptr == NULL) {
-    *ptr = NULL;
-    printk("ERROR\n");
-  } else {
-    printk("GOOD\n");
-    *ptr = newptr;
-    printk("ptr = %d\n", *ptr);
-  }
-
-
+  printk(KERN_EMERG "Call my dynamic syscall with size : %lu and ip = '%s'\n", size, server);
 
   return 0;
 }
