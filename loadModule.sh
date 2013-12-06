@@ -1,7 +1,7 @@
 #!/bin/sh
         
-module="NetMalloc"
-default_adress="192.168.0.1:12345"
+module="NetMalloc_sys"
+default_adress="127.0.0.1:12345"
 
 
 if [ $# = 1 ];

@@ -1,5 +1,5 @@
 #!/bin/sh
 
-module="NetMalloc"
+module="NetMalloc_sys"
 
 rmmod ./$module.ko $* || exit 1

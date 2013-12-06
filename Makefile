@@ -1,4 +1,4 @@
-obj-m = NetMalloc.o
+obj-m = NetMalloc_sys.o
 KVERSION = $(shell uname -r)
 
 all:

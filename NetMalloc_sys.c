@@ -5,6 +5,7 @@
 #include <linux/syscalls.h>
 #include <linux/unistd.h>
 #include <linux/slab.h>
+#include "common.h"
 
 //Module definition
 #define AUTHOR      "Nicolas KLARMAN and Claude RAMSEYER"
@@ -19,7 +20,7 @@ MODULE_LICENSE(LICENSE);
 
 //Module parameters
 
-static char *server = "192.168.0.1:12345";
+static char *server = "127.0.0.1:12345";
 
 module_param(server, charp, 0);
 MODULE_PARM_DESC(server, "server argument. IP:PORT");
@@ -52,14 +53,32 @@ typedef __POINTER_TYPE * addr_t;
 
 static addr_t sys_saved = NULL;
 
+
+void doAlloc(net_malloc_arg_t arg)
+{
+  printk(KERN_EMERG "Do Allocation\n");
+}
+
+void doFree(net_malloc_arg_t arg)
+{
+  printk(KERN_EMERG "Do Free\n");
+}
+
 /**
  *
  *
  */
-asmlinkage int sys_netmalloc(unsigned long size, void **ptr)
+asmlinkage int sys_netmalloc(net_malloc_arg_t *arg)
 {
-  printk(KERN_EMERG "Call my dynamic syscall with size : %lu and ip = '%s'\n", size, server);
+  switch(arg->action) {
+  case A_ALLOC:
+    doAlloc(arg);
+    break;
 
+  case A_FREE:
+    doFree(arg);
+    break;
+  }
   return 0;
 }
 
